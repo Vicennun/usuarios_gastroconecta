@@ -20,4 +20,7 @@ public class User {
     @Email(message = "Debe ser un correo válido")
     private String email;
     
+    @NotBlank(message = "La contraseña no puede estar vacía")
+    private String password;
+    
 }

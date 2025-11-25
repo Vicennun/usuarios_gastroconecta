@@ -3,6 +3,8 @@ package com.fullstack.usuarios.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+import java.util.Optional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fullstack.usuarios.dto.User;
+import com.fullstack.usuarios.dto.LoginRequest;
 import com.fullstack.usuarios.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -41,6 +44,13 @@ public class UserController {
     @PostMapping
     public ResponseEntity<User> create(@RequestBody User user) {
         return ResponseEntity.ok(userService.create(user));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<User> login(@RequestBody LoginRequest request) {
+        Optional<User> maybeUser = userService.login(request.getEmail(), request.getPassword());
+        return maybeUser.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
 
     @PutMapping("/{id}")
