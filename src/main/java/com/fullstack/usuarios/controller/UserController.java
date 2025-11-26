@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import org.springframework.web.bind.annotation.RestController;
 
@@ -64,4 +65,31 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/{userId}/guardar/{recetaId}")
+    public ResponseEntity<User> toggleGuardar(@PathVariable Long userId, @PathVariable Long recetaId) {
+        User usuario = userService.getById(userId);
+        if (usuario.getRecetario().contains(recetaId)) {
+            usuario.getRecetario().remove(recetaId);
+        } else {
+            usuario.getRecetario().add(recetaId);
+        }
+        return ResponseEntity.ok(userService.create(usuario)); // Guardamos
+    }
+
+    @PostMapping("/{userId}/seguir/{targetId}")
+    public ResponseEntity<User> toggleSeguir(@PathVariable Long userId, @PathVariable Long targetId) {
+        User usuarioActual = userService.getById(userId);
+        User usuarioObjetivo = userService.getById(targetId);
+
+        if (usuarioActual.getSiguiendo().contains(targetId)) {
+            usuarioActual.getSiguiendo().remove(targetId);
+            usuarioObjetivo.getSeguidores().remove(userId);
+        } else {
+            usuarioActual.getSiguiendo().add(targetId);
+            usuarioObjetivo.getSeguidores().add(userId);
+        }
+        
+        userService.create(usuarioObjetivo); // Guardamos al otro
+        return ResponseEntity.ok(userService.create(usuarioActual)); // Guardamos al actual
+    }
 }

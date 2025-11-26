@@ -1,5 +1,8 @@
 package com.fullstack.usuarios.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -23,4 +26,13 @@ public class User {
     @NotBlank(message = "La contraseña no puede estar vacía")
     private String password;
     
+    @ElementCollection
+    private List<Long> recetario = new ArrayList<>(); // IDs de recetas guardadas
+
+    @ElementCollection
+    private List<Long> siguiendo = new ArrayList<>(); // IDs de usuarios seguidos
+
+    @ElementCollection
+    private List<Long> seguidores = new ArrayList<>(); // IDs de quienes me siguen
+
 }

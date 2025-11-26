@@ -42,4 +42,7 @@ public class Receta {
     // En el futuro puedes crear una entidad Ingrediente separada.
     @ElementCollection
     private List<String> ingredientesSimples = new ArrayList<>();
+
+    @ElementCollection
+    private List<Comentario> comentarios = new ArrayList<>();
 }
