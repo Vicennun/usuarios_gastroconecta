@@ -3,9 +3,9 @@ package com.fullstack.usuarios.controller;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import com.fullstack.usuarios.dto.Comentario;
 import com.fullstack.usuarios.dto.Receta;
+import com.fullstack.usuarios.dto.Comentario;
+import com.fullstack.usuarios.dto.Rating;
 import com.fullstack.usuarios.service.RecetaService;
 import lombok.RequiredArgsConstructor;
 
@@ -35,7 +35,25 @@ public class RecetaController {
     @PostMapping("/{id}/comentar")
     public ResponseEntity<Receta> comentar(@PathVariable Long id, @RequestBody Comentario comentario) {
         Receta receta = recetaService.getById(id);
-        receta.getComentarios().add(0, comentario); // Agrega al principio
-        return ResponseEntity.ok(recetaService.create(receta)); // Reutilizamos create para guardar
+        receta.getComentarios().add(0, comentario); 
+        return ResponseEntity.ok(recetaService.create(receta)); 
+    }
+
+    // --- NUEVOS ENDPOINTS ---
+
+    @PostMapping("/{id}/rate")
+    public ResponseEntity<Receta> rate(@PathVariable Long id, @RequestBody Rating rating) {
+        Receta receta = recetaService.getById(id);
+        // Si ya votó, actualizamos su voto. Si no, lo agregamos.
+        receta.getRatings().removeIf(r -> r.getUserId().equals(rating.getUserId()));
+        receta.getRatings().add(rating);
+        return ResponseEntity.ok(recetaService.create(receta));
+    }
+
+    @PutMapping("/{id}/confirmar")
+    public ResponseEntity<Receta> confirmar(@PathVariable Long id) {
+        Receta receta = recetaService.getById(id);
+        receta.setConfirmado(true);
+        return ResponseEntity.ok(recetaService.create(receta));
     }
 }

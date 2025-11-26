@@ -23,12 +23,12 @@ public class Receta {
     private Long autorId;
     private String autorNombre;
     
-    @Column(length = 1000)
+    // IMPORTANTE: LONGTEXT permite guardar la imagen en Base64
+    @Column(columnDefinition = "LONGTEXT") 
     private String foto;
     
     private boolean confirmado;
 
-    // Listas simples guardadas en tablas auxiliares automáticas
     @ElementCollection
     private List<String> pasos = new ArrayList<>();
 
@@ -38,11 +38,13 @@ public class Receta {
     @ElementCollection
     private List<Long> likes = new ArrayList<>();
 
-    // Para simplificar ingredientes (guardaremos el string completo por ahora "Harina, 1 taza")
-    // En el futuro puedes crear una entidad Ingrediente separada.
     @ElementCollection
     private List<String> ingredientesSimples = new ArrayList<>();
 
     @ElementCollection
     private List<Comentario> comentarios = new ArrayList<>();
+
+    // --- NUEVO: Lista de Ratings ---
+    @ElementCollection
+    private List<Rating> ratings = new ArrayList<>();
 }

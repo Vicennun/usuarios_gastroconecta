@@ -1,12 +1,11 @@
 package com.fullstack.usuarios.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Data
@@ -17,22 +16,24 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "El nombre no puede estar vacío")
+    @NotBlank
     private String name;
 
-    @Email(message = "Debe ser un correo válido")
+    @Email
     private String email;
     
-    @NotBlank(message = "La contraseña no puede estar vacía")
+    @NotBlank
     private String password;
-    
-    @ElementCollection
-    private List<Long> recetario = new ArrayList<>(); // IDs de recetas guardadas
+
+    // --- NUEVO: Rol para admin ---
+    private String rol = "user"; 
 
     @ElementCollection
-    private List<Long> siguiendo = new ArrayList<>(); // IDs de usuarios seguidos
+    private List<Long> recetario = new ArrayList<>();
 
     @ElementCollection
-    private List<Long> seguidores = new ArrayList<>(); // IDs de quienes me siguen
+    private List<Long> siguiendo = new ArrayList<>();
 
+    @ElementCollection
+    private List<Long> seguidores = new ArrayList<>();
 }
